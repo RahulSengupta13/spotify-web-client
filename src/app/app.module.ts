@@ -14,7 +14,9 @@ import { HomeComponent } from './components/home/home.component';
 
 import { AuthService } from './services/auth.service';
 import { ProfileService } from './services/profile.service';
+import { StatusService } from './services/status.service';
 
+import {AuthGuard} from './guard/auth.guard';
 
 //routes for this application
 const appRoutes = [
@@ -24,7 +26,12 @@ const appRoutes = [
   },
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: '',
+    component: LoginComponent
   }
 ];
 
@@ -48,7 +55,9 @@ const appRoutes = [
       useClass: TokenInterceptor,
       multi: true
     },
-    ProfileService
+    ProfileService,
+    AuthGuard,
+    StatusService
   ],
   bootstrap: [AppComponent]
 })

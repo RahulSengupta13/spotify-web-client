@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders, HttpRequest } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
+import { StatusService } from '../services/status.service';
 
 @Injectable()
 export class AuthService {
@@ -13,16 +14,17 @@ export class AuthService {
   private refresh_token:string;
   private encoded = btoa(this.client_id + ':' + this.client_secret);
   private base64 = 'OTk2MDgwOTM3ZWJiNDU5NGEwOTc5MTQ2YzljMGMxMjE6MGJkYTNjZmQyMTNjNDYyMmJjNmM1NjI1ODY1NjhlYzg=';
-  cachedRequests: Array<HttpRequest<any>> = [];
 
   constructor(
-    private http:HttpClient
+    private http:HttpClient,
+    private statusService:StatusService
   ) { 
 
   }
 
   getAccessToken(){
-    return localStorage.getItem('access_token');
+    // return localStorage.getItem('access_token');
+    return this.statusService.token;
   }
 
   getEncoded(){
@@ -50,7 +52,8 @@ export class AuthService {
         params: params
       }).map(result => {
         localStorage.setItem('refresh_token', JSON.parse(JSON.stringify(result)).refresh_token);
-        localStorage.setItem('access_token', JSON.parse(JSON.stringify(result)).access_token);
+        // localStorage.setItem('access_token', JSON.parse(JSON.stringify(result)).access_token);
+        this.statusService.token = JSON.parse(JSON.stringify(result)).access_token;
         return result;
       }, error => {
         this.handleError;
@@ -72,7 +75,8 @@ export class AuthService {
         params: params
       }).map(result => {
         let access_token = JSON.parse(JSON.stringify(result)).access_token;
-        localStorage.setItem('access_token', access_token);
+        // localStorage.setItem('access_token', access_token);
+        this.statusService.token = JSON.parse(JSON.stringify(result)).access_token;
         return result;
       }, error => {
         this.handleError;

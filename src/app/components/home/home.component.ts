@@ -10,6 +10,7 @@ import { User } from '../../models/user.model';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit {
 
   currentUser:User = {
@@ -29,10 +30,10 @@ export class HomeComponent implements OnInit {
   ) {
       this.activatedRoute.queryParams.subscribe((params: Params) => {
         if(params.code){
-          this._flashMessagesService.show('Login success!', { cssClass: 'alert-success', timeout: 2000 });
           localStorage.setItem('code', params.code);
           this.authService.requestTokens().subscribe(
             result=>{
+              this._flashMessagesService.show('Login success!', { cssClass: 'alert-success', timeout: 2000 });
               console.log(result);
               this.fetchProfile();
             }, error => {

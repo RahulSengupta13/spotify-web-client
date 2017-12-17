@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { StatusService } from '../../services/status.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +9,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  logoutHidden:boolean = true;
+
+  constructor(
+    private router: Router,
+    private statusService: StatusService
+  ) {
+
+    statusService.access_token.subscribe(
+      (nextValue) => {
+        this.logoutHidden = false;
+      }
+    );
+
+   }
 
   ngOnInit() {
+    
+  }
+
+  onLogout(){
+    localStorage.clear();
+    this.logoutHidden = true;
+    this.router.navigate(['/login']);
   }
 
 }

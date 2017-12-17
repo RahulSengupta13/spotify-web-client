@@ -10,13 +10,15 @@ import {
 import { AuthService } from '../services/auth.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
+import { Router} from '@angular/router';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
     private authService: AuthService;
     constructor(
-        private injector: Injector
+        private injector: Injector,
+        private router: Router
     ) {}
     
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {    
@@ -44,6 +46,7 @@ export class TokenInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 400) {
             console.log(err.error);
+            this.router.navigate(['/login']);
           }
         }
       });
