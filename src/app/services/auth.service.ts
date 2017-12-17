@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders, HttpRequest } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
-import { request } from 'http';
 
 @Injectable()
 export class AuthService {
@@ -14,11 +13,16 @@ export class AuthService {
   private refresh_token:string;
   private encoded = btoa(this.client_id + ':' + this.client_secret);
   private base64 = 'OTk2MDgwOTM3ZWJiNDU5NGEwOTc5MTQ2YzljMGMxMjE6MGJkYTNjZmQyMTNjNDYyMmJjNmM1NjI1ODY1NjhlYzg=';
+  cachedRequests: Array<HttpRequest<any>> = [];
 
   constructor(
     private http:HttpClient
   ) { 
 
+  }
+
+  getAccessToken(){
+    return localStorage.getItem('access_token');
   }
 
   getEncoded(){
@@ -30,7 +34,6 @@ export class AuthService {
   }
 
   requestTokens(){
-
     let headers = new HttpHeaders();
     // headers = headers.append('Authorization', 'Basic ' + this.encoded);
     headers = headers.append('Content-Type','application/x-www-form-urlencoded');
@@ -46,11 +49,38 @@ export class AuthService {
         headers: headers,
         params: params
       }).map(result => {
+        localStorage.setItem('refresh_token', JSON.parse(JSON.stringify(result)).refresh_token);
+        localStorage.setItem('access_token', JSON.parse(JSON.stringify(result)).access_token);
         return result;
       }, error => {
         this.handleError;
       });
+  }
 
+  refreshTokens(){
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type','application/x-www-form-urlencoded');
+    headers = headers.append('Accept','application/json');
+
+    let params = new HttpParams();
+    params = params.append('grant_type', 'authorization_code');
+    params = params.append('refresh_token', this.getRefreshToken());
+
+    return this.http.post('https://accounts.spotify.com/api/token',null,
+      {
+        headers: headers,
+        params: params
+      }).map(result => {
+        let access_token = JSON.parse(JSON.stringify(result)).access_token;
+        localStorage.setItem('access_token', access_token);
+        return result;
+      }, error => {
+        this.handleError;
+      });
+  }
+
+  getRefreshToken(){
+    return localStorage.getItem('refresh_token');
   }
 
   private handleError(error: Response) {

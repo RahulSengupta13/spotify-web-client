@@ -10,9 +10,10 @@ import { TokenInterceptor } from './interceptor/token.interceptor';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
 
 import { AuthService } from './services/auth.service';
-import { HomeComponent } from './components/home/home.component';
+import { ProfileService } from './services/profile.service';
 
 
 //routes for this application
@@ -46,7 +47,8 @@ const appRoutes = [
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
-    }
+    },
+    ProfileService
   ],
   bootstrap: [AppComponent]
 })

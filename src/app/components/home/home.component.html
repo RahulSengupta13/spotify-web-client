@@ -1,3 +1,12 @@
-<p>
-  home works!
-</p>
+<hr class="featurette-divider mt-2">
+<div class="row featurette">
+    <div class="col-md-7">
+      <h2 class="featurette-heading">user profile <span class="text-muted">details</span></h2>
+      <h3>{{currentUser.display_name}}</h3>
+      <p class="lead">{{currentUser.email}} | {{currentUser.country}} | spotify id: {{currentUser.id}}</p>
+    </div>
+    <div class="col-md-5">
+      <img class="featurette-image img-fluid mx-auto rounded-circle" src="{{currentUser.imageUrl}}" alt="image">
+    </div>
+</div>
+<hr class="featurette-divider">
