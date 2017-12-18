@@ -44,7 +44,7 @@ export class TokenInterceptor implements HttpInterceptor {
       },
       (err: any) => {
         if (err instanceof HttpErrorResponse) {
-          if (err.status === 400) {
+          if (err.status === 400 && request.url=='https://accounts.spotify.com/api/token') {
             console.log(err.error);
             this.router.navigate(['/login']);
           }

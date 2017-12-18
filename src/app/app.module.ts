@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FlashMessagesModule } from 'angular2-flash-messages';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptor/token.interceptor';
@@ -15,6 +16,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AuthService } from './services/auth.service';
 import { ProfileService } from './services/profile.service';
 import { StatusService } from './services/status.service';
+import { SearchService } from './services/search.service';
 
 import {AuthGuard} from './guard/auth.guard';
 
@@ -46,6 +48,8 @@ const appRoutes = [
     RouterModule.forRoot(appRoutes),
     BrowserModule,
     HttpClientModule,
+    FormsModule, 
+    ReactiveFormsModule,
     FlashMessagesModule.forRoot()
   ],
   providers: [
@@ -57,6 +61,7 @@ const appRoutes = [
     },
     ProfileService,
     AuthGuard,
+    SearchService,
     StatusService
   ],
   bootstrap: [AppComponent]

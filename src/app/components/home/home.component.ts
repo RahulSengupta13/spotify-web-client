@@ -4,7 +4,8 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { AuthService } from '../../services/auth.service';
 import { ProfileService } from '../../services/profile.service';
 import { User } from '../../models/user.model';
-
+import { SearchService } from '../../services/search.service';
+import { Search } from '../../models//search.model';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -21,13 +22,18 @@ export class HomeComponent implements OnInit {
     imageUrl:''
   };
 
+  searchString:string = '';
+  searchResults:any = {};
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private _flashMessagesService: FlashMessagesService,
     private router: Router,
     private authService: AuthService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private searchService: SearchService
   ) {
+
       this.activatedRoute.queryParams.subscribe((params: Params) => {
         if(params.code){
           localStorage.setItem('code', params.code);
@@ -65,6 +71,17 @@ export class HomeComponent implements OnInit {
         this.currentUser.imageUrl = object.images[0].url;
       }, error => {
 
+      }
+    );
+  }
+
+  searchMusic(){
+    this.searchService.search(this.searchString).subscribe(
+      result => {
+        this.searchResults = result;
+        console.log(this.searchResults);
+      }, error => {
+        this.searchResults = {};
       }
     );
   }

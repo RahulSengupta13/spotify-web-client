@@ -3,20 +3,22 @@ import { HttpClient, HttpErrorResponse, HttpParams, HttpHeaders, HttpRequest } f
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class ProfileService {
+export class SearchService {
 
   constructor(
     private http:HttpClient
   ) { }
 
-  fetchProfile(){
-    return this.http.get('https://api.spotify.com/v1/me').map(
+  search(searchString:string){
+    searchString = searchString.replace(' ','%20');
+    let searchUrl:string = 'https://api.spotify.com/v1/search?q='+searchString+'&type=artist,album,track&limit=5'; 
+    return this.http.get(searchUrl).map(
       result => {
-        console.log(result);
         return result;
-      }, error => {
+      }, error =>{
         return error;
       }
     );
   }
+
 }
