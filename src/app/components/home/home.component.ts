@@ -6,6 +6,8 @@ import { ProfileService } from '../../services/profile.service';
 import { User } from '../../models/user.model';
 import { SearchService } from '../../services/search.service';
 import { Search } from '../../models//search.model';
+import { ScrollEvent } from 'ngx-scroll-event';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -25,7 +27,9 @@ export class HomeComponent implements OnInit {
   searchString:string = '';
   searchResults:any = {};
   userPlaylists:any = {};
-
+  userLibrary:any = {};
+  librarySize:number;
+  currentOffset:number;
   constructor(
     private activatedRoute: ActivatedRoute,
     private _flashMessagesService: FlashMessagesService,
@@ -34,7 +38,7 @@ export class HomeComponent implements OnInit {
     private profileService: ProfileService,
     private searchService: SearchService
   ) {
-
+      this.currentOffset = 0;
       this.activatedRoute.queryParams.subscribe((params: Params) => {
         if(params.code){
           localStorage.setItem('code', params.code);
@@ -44,6 +48,7 @@ export class HomeComponent implements OnInit {
               console.log(result);
               this.fetchProfile();
               this.fetchPlaylists();
+              this.fetchLibrary();
             }, error => {
               console.log(error);
             }
@@ -96,6 +101,42 @@ export class HomeComponent implements OnInit {
         this.searchResults = {};
       }
     );
+  }
+
+  fetchLibrary(){
+    this.profileService.fetchLibrary().subscribe(
+      result => {
+        this.userLibrary = result;
+        this.librarySize = this.userLibrary.total;
+      }, error => {
+        console.log(error);
+      }
+    );
+  }
+
+  public handleScroll(event: ScrollEvent) {
+    if (event.isReachingBottom) {
+      if(this.currentOffset<this.librarySize){
+        let res = this.librarySize - this.currentOffset;
+        if(res%20 == 0){
+          this.currentOffset += 20;
+        } else {
+          this.currentOffset += res%20;
+        }
+        this.profileService.fetchLibrary(this.currentOffset).subscribe(
+          result => {
+            let res:any = {};
+            res = result;
+            this.userLibrary.items = this.userLibrary.items.concat(res.items);
+          }, error => {
+            console.log(error);
+          }
+        );
+      }
+    }
+    if (event.isWindowEvent) {
+    }
+ 
   }
 
 }

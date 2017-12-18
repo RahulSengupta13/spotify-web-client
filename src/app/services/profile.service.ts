@@ -58,4 +58,17 @@ export class ProfileService {
     );
   }
 
+  fetchLibrary(offset:number=0){
+    return this.http.get('https://api.spotify.com/v1/me/tracks?offset='+offset).map(
+      result => {
+        console.log(result);
+        return result;
+      },
+      error => {
+        console.log(error);
+        return error;
+      }
+    );
+  }
+
 }

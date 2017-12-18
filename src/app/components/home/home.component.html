@@ -4,7 +4,7 @@
       <img class="featurette-image img-fluid mx-auto rounded-circle" src="{{currentUser.imageUrl}}" alt="image" height="120px" width="120px">
     </div>
     <div class="col-md-5">
-        <h2 class="featurette-heading">user profile <span class="text-muted">details</span></h2>
+        <h2 class="featurette-heading"><fa name="spotify"></fa> profile <span class="text-muted">details</span></h2>
         <h3>{{currentUser.display_name}}</h3>
         <p class="lead">{{currentUser.email}} | {{currentUser.country}} | spotify id: {{currentUser.id}}</p>
     </div>
@@ -81,9 +81,9 @@
                     <img src="{{track.album.images[1].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded-circle"/>
                 </div>
                 <div class="col-md-8">
-                  <span *ngIf="track.preview_url!=null; else nolink"><a href="{{track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa> {{track.name}}</a></span>
+                  <span *ngIf="track.preview_url!=null; else nolink"><a href="{{track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa> {{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
                   <ng-template #nolink>
-                    <span><a href="#">{{track.name}}</a></span>
+                    <span><a href="#">{{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
                   </ng-template>
                 </div>
               </div>
@@ -100,8 +100,35 @@
   </div>
 </div>
 
+<!-- user library -->
+<h3 class="mt-4">your library</h3>
+<div class="row mt-4 mb-3" style="overflow-y: scroll; height: 400px;" id="style-2" detect-scroll (onScroll)="handleScroll($event)" [bottomOffset]="200">
+  <div *ngFor="let track of userLibrary.items" class="col-lg-12">
+    <div class="row">
+      <div class="col-lg-1" align="center">
+        <img class="featurette-image mx-auto img-fluid rounded" src="{{track.track.album.images[0].url}}" alt="image" height="50px" width="50px">
+      </div>
+      <div class="col-lg-10" style="position:relative; transform:translateY(20%);">
+          <p class="lead" *ngIf="track.track.preview_url!=null; else nolink"><a href="{{track.track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa>{{track.track.name}}</a> - <strong>{{track.track.album.name}}</strong></p>
+          <ng-template #nolink>
+              <p class="lead" ><a href="#">{{track.track.name}}</a> - <strong>{{track.track.album.name}}</strong></p>
+          </ng-template>
+      </div>
+      <div class="col-lg-10 mx-auto py-0">
+        <hr/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-2">
+  <div class="col-lg-5 mx-auto">
+    <hr>
+  </div>
+</div>
+
 <!-- user playlists -->
-<div class="row">
+<div class="row mb-2">
   <div class="col-lg-12 mx-auto">
     <div *ngIf="userPlaylists.items.length>0">
         <h3>playlists you follow</h3>
