@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
 
   searchString:string = '';
   searchResults:any = {};
+  userPlaylists:any = {};
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit {
               this._flashMessagesService.show('Login success!', { cssClass: 'alert-success', timeout: 2000 });
               console.log(result);
               this.fetchProfile();
+              this.fetchPlaylists();
             }, error => {
               console.log(error);
             }
@@ -70,7 +72,17 @@ export class HomeComponent implements OnInit {
         this.currentUser.id = object.id;
         this.currentUser.imageUrl = object.images[0].url;
       }, error => {
+        console.log(error);
+      }
+    );
+  }
 
+  fetchPlaylists(){
+    this.profileService.fetchPlaylists().subscribe(
+      result => {
+        this.userPlaylists = result;
+      }, error => {
+        console.log(error);
       }
     );
   }

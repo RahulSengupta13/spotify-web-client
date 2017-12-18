@@ -5,6 +5,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptor/token.interceptor';
 
@@ -12,6 +14,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+import { ViewComponent } from './components/view/view.component';
 
 import { AuthService } from './services/auth.service';
 import { ProfileService } from './services/profile.service';
@@ -25,6 +28,11 @@ const appRoutes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'view-playlist/:oid/:pid',
+    component: ViewComponent,
+    // canActivate: [AuthGuard]
   },
   {
     path: 'home',
@@ -42,7 +50,8 @@ const appRoutes = [
     AppComponent,
     NavbarComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    ViewComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -50,7 +59,8 @@ const appRoutes = [
     HttpClientModule,
     FormsModule, 
     ReactiveFormsModule,
-    FlashMessagesModule.forRoot()
+    FlashMessagesModule.forRoot(),
+    AngularFontAwesomeModule
   ],
   providers: [
     AuthService,

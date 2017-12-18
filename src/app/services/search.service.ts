@@ -11,7 +11,7 @@ export class SearchService {
 
   search(searchString:string){
     searchString = searchString.replace(' ','%20');
-    let searchUrl:string = 'https://api.spotify.com/v1/search?q='+searchString+'&type=artist,album,track&limit=5'; 
+    let searchUrl:string = 'https://api.spotify.com/v1/search?q='+searchString+'&type=artist,album,track&limit=20'; 
     return this.http.get(searchUrl).map(
       result => {
         return result;
