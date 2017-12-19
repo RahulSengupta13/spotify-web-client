@@ -71,4 +71,50 @@ export class ProfileService {
     );
   }
 
+  checkTrackInLibrary(id:string){
+    return this.http.get('https://api.spotify.com/v1/me/tracks/contains?ids='+id).map(
+      result => {
+        console.log("Track Status: "+result);
+        return result;
+      },
+      error => {
+        return error;
+      }
+    );
+  }
+
+  addTrackToLibrary(id:string){
+    let ids = {
+      "ids":[id]
+    };
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type','application/json');
+    return this.http.put('https://api.spotify.com/v1/me/tracks',ids,{headers:headers}).map(
+      result => {
+        console.log(result);
+        return result;
+      },
+      error => {
+        console.log(error);
+        return error;
+      }
+    );
+  }
+
+  deleteTrackFromLibrary(id:string){
+    let ids = {
+      "ids":[id]
+    };
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type','application/json');
+    return this.http.delete('https://api.spotify.com/v1/me/tracks?ids='+id).map(
+      result => {
+        return result;
+      },
+      error => {
+        return error;
+      }
+    );
+  }
+
 }

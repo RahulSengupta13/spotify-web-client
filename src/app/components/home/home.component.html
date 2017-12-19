@@ -36,13 +36,13 @@
           <h4>matching artists</h4>
           <div *ngFor = "let artist of searchResults.artists.items">
             <div class="row py-1 mb-1" *ngIf="artist.name != '' && artist.images.length>0">
-              <div class="col-md-10">
+              <div class="col-md-12">
                 <div class="row search-res well">
                   <div class="col-md-1">
                       <img src="{{artist.images[1].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded-circle"/>
                   </div>
                   <div class="col-md-8">
-                    <span><a href="#">{{artist.name}}</a></span><br>
+                    <span class="lead"><a href="#">{{artist.name}}</a></span><br>
                     <strong>genres: </strong>
                     <span *ngFor = "let genre of artist.genres">{{genre}}</span>
                   </div>
@@ -56,13 +56,13 @@
         <h4>matching albums</h4>
         <div *ngFor = "let album of searchResults.albums.items">
           <div class="row py-1 mb-1" *ngIf="album.name != '' && album.images.length>0">
-            <div class="col-md-10">
+            <div class="col-md-12">
               <div class="row search-res well">
                 <div class="col-md-1">
                     <img src="{{album.images[1].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded-circle"/>
                 </div>
                 <div class="col-md-8">
-                  <span><a href="#">{{album.name}}</a></span><br>
+                  <span class="lead"><a href="#">{{album.name}}</a></span><br>
                   <strong>album type: </strong><span>{{album.album_type}}</span>
                 </div>
               </div>
@@ -74,17 +74,19 @@
       <div *ngIf="searchResults.tracks.items.length>0"  class="ml-1">
         <h4>matching tracks</h4>
         <div *ngFor = "let track of searchResults.tracks.items">
-          <div class="row py-1 mb-1" *ngIf="track.name != '' && track.album.images.length>0">
-            <div class="col-md-10">
+          <div class="row py-2 mb-1" *ngIf="track.name != '' && track.album.images.length>0">
+            <div class="col-md-9">
               <div class="row search-res well">
                 <div class="col-md-1">
-                    <img src="{{track.album.images[1].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded-circle"/>
+                    <img src="{{track.album.images[1].url}}" height="60px" width="60px" class="img-fluid mx-auto rounded-circle"/>
                 </div>
-                <div class="col-md-8">
-                  <span *ngIf="track.preview_url!=null; else nolink"><a href="{{track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa> {{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
+                <div class="col-md-11">
+                  <span *ngIf="track.preview_url!=null; else nolink" class="lead"><a href="{{track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa> {{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
                   <ng-template #nolink>
-                    <span><a href="#">{{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
+                    <span class="lead"><a href="#">{{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
                   </ng-template>
+                  <br/>
+                  <button (click)="addToLibrary(track.id)" class="btn btn-outline-success py-0"><fa name="plus-circle"></fa> library</button>
                 </div>
               </div>
             </div>
@@ -101,18 +103,19 @@
 </div>
 
 <!-- user library -->
-<h3 class="mt-4">your library</h3>
+<h3 class="mt-2">your library<span class="lead"> ({{librarySize}} tracks)</span></h3>
 <div class="row mt-4 mb-3" style="overflow-y: scroll; height: 400px;" id="style-2" detect-scroll (onScroll)="handleScroll($event)" [bottomOffset]="200">
   <div *ngFor="let track of userLibrary.items" class="col-lg-12">
     <div class="row">
-      <div class="col-lg-1" align="center">
+      <div class="col-lg-1">
         <img class="featurette-image mx-auto img-fluid rounded" src="{{track.track.album.images[0].url}}" alt="image" height="50px" width="50px">
       </div>
       <div class="col-lg-10" style="position:relative; transform:translateY(20%);">
-          <p class="lead" *ngIf="track.track.preview_url!=null; else nolink"><a href="{{track.track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa>{{track.track.name}}</a> - <strong>{{track.track.album.name}}</strong></p>
+          <span class="lead" *ngIf="track.track.preview_url!=null; else nolink"><a href="{{track.track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa>{{track.track.name}}</a> - <strong>{{track.track.album.name}}</strong></span>
           <ng-template #nolink>
-              <p class="lead" ><a href="#">{{track.track.name}}</a> - <strong>{{track.track.album.name}}</strong></p>
+              <span class="lead" ><a href="#">{{track.track.name}}</a> - <strong>{{track.track.album.name}}</strong></span>
           </ng-template>
+          <button class="btn btn-outline-danger py-0" style="float: right;" (click)="deleteFromLibrary(track.track.id)"><fa name="minus-circle"></fa></button>
       </div>
       <div class="col-lg-10 mx-auto py-0">
         <hr/>
@@ -131,8 +134,11 @@
 <div class="row mb-2">
   <div class="col-lg-12 mx-auto">
     <div *ngIf="userPlaylists.items.length>0">
-        <h3>playlists you follow</h3>
-        <div class="row mt-1">
+        <div class="row">
+          <div style="width:100%">
+              <h3 class="mb-3" style="float:left">playlists you follow</h3>
+              <button class="btn btn-outline-success" style="float:right"><fa name="plus-circle"></fa> new playlist</button>
+          </div>
           <div *ngFor="let playlist of userPlaylists.items">
             <div class="col-lg-12 py-2" style="width:360px">
               <div class="row">
@@ -140,7 +146,7 @@
                     <img src="{{playlist.images[0].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded"/>
                 </div>
                 <div class="col-lg-9">
-                  <span><a href="#" [routerLink]="['/view-playlist',playlist.owner.id,playlist.id]">{{playlist.name}}</a></span> by <strong>{{playlist.owner.display_name}}</strong><br>
+                  <span class="lead"><a href="#" [routerLink]="['/view-playlist',playlist.owner.id,playlist.id]">{{playlist.name}}</a> by</span> <strong><span class="lead">{{playlist.owner.display_name}}</span></strong><br>
                   <strong>total tracks: </strong>{{playlist.tracks.total}}
                 </div>
               </div>
@@ -150,4 +156,3 @@
     </div>
   </div>
 </div>
-

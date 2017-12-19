@@ -27,9 +27,10 @@ export class HomeComponent implements OnInit {
   searchString:string = '';
   searchResults:any = {};
   userPlaylists:any = {};
-  userLibrary:any = {};
+  userLibrary:any;
   librarySize:number;
   currentOffset:number;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private _flashMessagesService: FlashMessagesService,
@@ -39,6 +40,7 @@ export class HomeComponent implements OnInit {
     private searchService: SearchService
   ) {
       this.currentOffset = 0;
+      this.userLibrary = {};
       this.activatedRoute.queryParams.subscribe((params: Params) => {
         if(params.code){
           localStorage.setItem('code', params.code);
@@ -138,5 +140,40 @@ export class HomeComponent implements OnInit {
     }
  
   }
+
+  addToLibrary(trackId:string){
+    this.profileService.checkTrackInLibrary(trackId).subscribe(
+      result => {
+        if(!result[0]){
+          this.profileService.addTrackToLibrary(trackId).subscribe(
+            result => {
+              this._flashMessagesService.show('track added to library!', { cssClass: 'alert-success', timeout: 2000 });
+              this.fetchLibrary();
+            }, error => {
+              this._flashMessagesService.show('could not add to library. Please try again!', { cssClass: 'alert-danger', timeout: 2000 });
+            }
+          );
+        } else {
+          this._flashMessagesService.show('track already in library.', { cssClass: 'alert-info', timeout: 2000 });
+        }
+      }, error => {
+
+      }
+    );
+  }
+
+  deleteFromLibrary(trackId:string){
+    this.profileService.deleteTrackFromLibrary(trackId).subscribe(
+      result => { 
+        this._flashMessagesService.show('track removed from library!', { cssClass: 'alert-success', timeout: 2000 });
+        this.fetchLibrary();
+      },
+      error => {
+        this._flashMessagesService.show('Could not remove. Please try again!', { cssClass: 'alert-danger', timeout: 2000 });
+      }
+    );
+  }
+
+
 
 }
