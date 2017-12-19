@@ -117,4 +117,18 @@ export class ProfileService {
     );
   }
 
+  createPlaylist(playlist:any,user_id:string){
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type','application/json');
+    return this.http.post('https://api.spotify.com/v1/users/'+user_id+'/playlists',playlist,{headers:headers}).map(
+      result => {
+        console.log(result);
+        return result;
+      },
+      error => {
+        return error;
+      }
+    );
+  }
+
 }

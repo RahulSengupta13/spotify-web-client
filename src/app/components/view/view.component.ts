@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
 import {ProfileService} from '../../services/profile.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-view',
@@ -11,6 +12,8 @@ export class ViewComponent implements OnInit {
 
   tracks:any = {};
   playlist:any = {};
+  currentUserId:string;
+  deleteHidden:boolean;
   constructor(
     private activatedRoute: ActivatedRoute,
     private profileService: ProfileService
@@ -19,6 +22,8 @@ export class ViewComponent implements OnInit {
   ngOnInit() {
     let playlist_id:string = this.activatedRoute.snapshot.params['pid'];
     let user_id:string = this.activatedRoute.snapshot.params['oid'];
+    this.currentUserId = localStorage.getItem('uid');
+    if(this.currentUserId == user_id) this.deleteHidden = false; else this.deleteHidden = true;
     this.fetchPlaylist(user_id,playlist_id);
     this.fetchTracks(user_id,playlist_id);
   }

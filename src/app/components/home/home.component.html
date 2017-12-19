@@ -137,13 +137,16 @@
         <div class="row">
           <div style="width:100%">
               <h3 class="mb-3" style="float:left">playlists you follow</h3>
-              <button class="btn btn-outline-success" style="float:right"><fa name="plus-circle"></fa> new playlist</button>
+              <button class="btn btn-outline-success" style="float:right" (click)="open(content)"><fa name="plus-circle"></fa> new playlist</button>
           </div>
           <div *ngFor="let playlist of userPlaylists.items">
             <div class="col-lg-12 py-2" style="width:360px">
               <div class="row">
                 <div class="col-lg-3">
-                    <img src="{{playlist.images[0].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded"/>
+                    <img *ngIf="playlist.images.length>0; else alt" src="{{playlist.images[0].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded" alt="img"/>
+                    <ng-template #alt>
+                        <img src="" height="50px" width="50px" class="img-fluid mx-auto rounded" alt="img"/>
+                    </ng-template>
                 </div>
                 <div class="col-lg-9">
                   <span class="lead"><a href="#" [routerLink]="['/view-playlist',playlist.owner.id,playlist.id]">{{playlist.name}}</a> by</span> <strong><span class="lead">{{playlist.owner.display_name}}</span></strong><br>
@@ -156,3 +159,44 @@
     </div>
   </div>
 </div>
+
+<!-- new playlist modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">create a new playlist</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <form novalidate #f="ngForm" (ngSubmit)="onSubmitNewPlaylist(f)">
+          <div class="form-group">
+              <input 
+                  type="text" 
+                  class="form-control"
+                  [ngClass]="{'is-invalid':playlistName.errors?.required && playlistName.touched}"
+                  [(ngModel)]="newPlaylist.name"
+                  #playlistName = "ngModel"
+                  name="name"
+                  required
+                  placeholder="playlist name" />
+              <div *ngIf="playlistName.errors?.required && playlistName.touched" class="invalid-feedback">
+                  playlist name is required
+              </div>
+          </div>
+          <div class="form-group">
+              <input 
+                  type="text" 
+                  class="form-control"
+                  [(ngModel)]="newPlaylist.description"
+                  name="description"
+                  placeholder="playlist description" />
+          </div>
+          <!-- <input type="submit" value="create" class="btn btn-primary"> -->
+          <button type="submit" class="btn btn-outline-success">create <fa name="music"></fa></button>
+      </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

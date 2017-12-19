@@ -7,6 +7,8 @@ import { User } from '../../models/user.model';
 import { SearchService } from '../../services/search.service';
 import { Search } from '../../models//search.model';
 import { ScrollEvent } from 'ngx-scroll-event';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 @Component({
   selector: 'app-home',
@@ -24,12 +26,21 @@ export class HomeComponent implements OnInit {
     imageUrl:''
   };
 
+  newPlaylist:any = {
+    name:'',
+    public:true,
+    collaborative:false,
+    description:''
+  }
+
   searchString:string = '';
   searchResults:any = {};
   userPlaylists:any = {};
   userLibrary:any;
   librarySize:number;
   currentOffset:number;
+  closeResult: string;
+  playlistModal:NgbModalRef;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -37,7 +48,8 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private profileService: ProfileService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private modalService: NgbModal
   ) {
       this.currentOffset = 0;
       this.userLibrary = {};
@@ -78,6 +90,7 @@ export class HomeComponent implements OnInit {
         this.currentUser.email = object.email;
         this.currentUser.id = object.id;
         this.currentUser.imageUrl = object.images[0].url;
+        localStorage.setItem('uid',this.currentUser.id);
       }, error => {
         console.log(error);
       }
@@ -167,6 +180,7 @@ export class HomeComponent implements OnInit {
       result => { 
         this._flashMessagesService.show('track removed from library!', { cssClass: 'alert-success', timeout: 2000 });
         this.fetchLibrary();
+        this.currentOffset = 0;
       },
       error => {
         this._flashMessagesService.show('Could not remove. Please try again!', { cssClass: 'alert-danger', timeout: 2000 });
@@ -174,6 +188,26 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  open(content) {
+    this.playlistModal = this.modalService.open(content);
+  }
+
+  onSubmitNewPlaylist({value,valid}:{value:any,valid:boolean}){
+    if(valid){
+      this.profileService.createPlaylist(this.newPlaylist,this.currentUser.id).subscribe(
+        result => {
+          console.log(result);
+          this._flashMessagesService.show('playlist created, add tracks to it!', { cssClass: 'alert-success', timeout: 2000 });
+          this.playlistModal.close();
+          this.userPlaylists = {};
+          this.fetchPlaylists();
+        }, error => {
+          console.log(error);
+          this._flashMessagesService.show('playlist created, add tracks to it!', { cssClass: 'alert-danger', timeout: 2000 });
+        }
+      );
+    }
+  }
 
 
 }

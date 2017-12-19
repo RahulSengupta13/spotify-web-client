@@ -24,7 +24,7 @@ import { SearchService } from './services/search.service';
 import {AuthGuard} from './guard/auth.guard';
 
 import { ScrollEventModule } from 'ngx-scroll-event';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 //routes for this application
 const appRoutes = [
   {
@@ -62,6 +62,7 @@ const appRoutes = [
     FormsModule, 
     ReactiveFormsModule,
     FlashMessagesModule.forRoot(),
+    NgbModule.forRoot(),
     AngularFontAwesomeModule,
     ScrollEventModule
   ],
