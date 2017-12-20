@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
   currentOffset:number;
   closeResult: string;
   playlistModal:NgbModalRef;
+  userOwnedPlayists:any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -53,6 +54,7 @@ export class HomeComponent implements OnInit {
   ) {
       this.currentOffset = 0;
       this.userLibrary = {};
+      this.userOwnedPlayists = [];
       this.activatedRoute.queryParams.subscribe((params: Params) => {
         if(params.code){
           localStorage.setItem('code', params.code);
@@ -101,10 +103,21 @@ export class HomeComponent implements OnInit {
     this.profileService.fetchPlaylists().subscribe(
       result => {
         this.userPlaylists = result;
+        this.filterUserOwnedPlaylists(this.userPlaylists.items);
       }, error => {
         console.log(error);
       }
     );
+  }
+
+  filterUserOwnedPlaylists(playlists:any){
+    let i:number = 0;
+    for(i=0;i<playlists.length;i++){
+      if(playlists[i].owner.id == this.currentUser.id){
+        this.userOwnedPlayists.push(playlists[i]);
+      }
+    }
+    console.log(this.userOwnedPlayists);
   }
 
   searchMusic(){
@@ -200,6 +213,7 @@ export class HomeComponent implements OnInit {
           this._flashMessagesService.show('playlist created, add tracks to it!', { cssClass: 'alert-success', timeout: 2000 });
           this.playlistModal.close();
           this.userPlaylists = {};
+          this.userOwnedPlayists = {};
           this.fetchPlaylists();
         }, error => {
           console.log(error);
@@ -209,5 +223,31 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  checkInLibrary(track_id:string){
+    this.profileService.checkTrackInLibrary(track_id).subscribe(
+      result=>{
+        if(!result[0]){
+          return false;
+        } else{
+          return true;
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+  
+  onAddToPlaylist(playlist_name:string, playlist_id:string, track_uri:string){
+    this.profileService.addTrackToPlaylist(playlist_id,track_uri,this.currentUser.id).subscribe(
+      result => {
+        this._flashMessagesService.show('track added to '+playlist_name, { cssClass: 'alert-success', timeout: 2000 });
+        this.userPlaylists = {};
+        this.fetchPlaylists();
+      }, error =>{
+        this._flashMessagesService.show('error adding track, please try again', { cssClass: 'alert-danger', timeout: 2000 });
+      }
+    );
+  }
 
 }

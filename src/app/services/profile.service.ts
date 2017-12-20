@@ -74,7 +74,6 @@ export class ProfileService {
   checkTrackInLibrary(id:string){
     return this.http.get('https://api.spotify.com/v1/me/tracks/contains?ids='+id).map(
       result => {
-        console.log("Track Status: "+result);
         return result;
       },
       error => {
@@ -123,6 +122,56 @@ export class ProfileService {
     return this.http.post('https://api.spotify.com/v1/users/'+user_id+'/playlists',playlist,{headers:headers}).map(
       result => {
         console.log(result);
+        return result;
+      },
+      error => {
+        return error;
+      }
+    );
+  }
+
+  addTrackToPlaylist(playlist_id:string,track_uri:string,user_id:string){
+    let uris = {
+      "uris":[track_uri]
+    };
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type','application/json');
+    return this.http.post('https://api.spotify.com/v1/users/'+user_id+'/playlists/'+playlist_id+'/tracks',
+      uris,
+      {headers:headers}).map(
+      result => {
+        return result;
+      },
+      error => {
+        return error;
+      }
+    );
+  }
+
+  deleteTrackFromPlaylist(playlist_id:string,track_uri:string,user_id:string){
+    let uris = {
+      "uris":[track_uri]
+    };
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type','application/json');
+    return this.http.request('delete','https://api.spotify.com/v1/users/'+user_id+'/playlists/'+playlist_id+'/tracks',
+      {
+        body: uris,
+        headers: headers
+      }).map(
+        result => {
+          console.log(result);
+          return result;
+        }, error => {
+          console.log(error);
+          return error;
+        }
+      );
+  }
+
+  unfollowPlaylist(owner_id:string, playlist_id:string){
+    return this.http.delete('https://api.spotify.com/v1/users/'+owner_id+'/playlists/'+playlist_id+'/followers').map(
+      result => {
         return result;
       },
       error => {

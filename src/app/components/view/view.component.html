@@ -9,7 +9,8 @@
         <h3 class="featurette-heading"><a href="{{playlist.external_urls.spotify}}" target="_blank"><span class="text-muted">{{playlist.name}}</span></a></h3>
         <h4>by: <a href="{{playlist.owner.external_urls.spotify}}" target="_blank">{{playlist.owner.display_name}}</a></h4>
         <p class="lead">{{playlist.description}}</p>
-        <button class="btn btn-outline-danger py-1" [hidden]="deleteHidden"><fa name="trash"></fa> delete playlist</button>
+        <button class="btn btn-outline-danger py-1" [hidden]="deleteHidden"
+        (click)="unFollowPlaylist(playlist.id)"><fa name="trash"></fa> unfollow</button>
     </div>
 </div>
 <h4 class="mt-4 lead"><span class="text-muted lead">{{tracks.total}} tracks in</span><strong> {{playlist.name}} </strong> <fa name="spotify"></fa></h4>
@@ -21,7 +22,7 @@
       </div>
       <div class="col-lg-9" style="position:relative; transform:translateY(20%);">
           <span class="lead"><a href="{{track.track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa>{{track.track.name}}</a> - <strong>{{track.track.album.name}}</strong></span>
-          <button class="btn btn-outline-danger py-0" style="float: right;" (click)="deleteFromPlaylist(track.track.id)" [hidden]="deleteHidden"><fa name="trash-o"></fa></button>
+          <button class="btn btn-outline-danger py-0" style="float: right;" (click)="deleteFromPlaylist(track.track.uri)" [hidden]="deleteHidden"><fa name="trash-o"></fa></button>
       </div>
       <div class="col-lg-12 mx-auto py-0">
         <hr>

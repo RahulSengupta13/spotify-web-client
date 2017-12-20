@@ -32,24 +32,36 @@
 <div *ngIf = "(searchResults | json) != '{}'">
   <h3>search results</h3>
   <div style="overflow-y: scroll; height:350px;" id="style-2">
-      <div *ngIf="searchResults.artists.items.length>0" class="ml-1">
-          <h4>matching artists</h4>
-          <div *ngFor = "let artist of searchResults.artists.items">
-            <div class="row py-1 mb-1" *ngIf="artist.name != '' && artist.images.length>0">
-              <div class="col-md-12">
-                <div class="row search-res well">
-                  <div class="col-md-1">
-                      <img src="{{artist.images[1].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded-circle"/>
-                  </div>
-                  <div class="col-md-8">
-                    <span class="lead"><a href="#">{{artist.name}}</a></span><br>
-                    <strong>genres: </strong>
-                    <span *ngFor = "let genre of artist.genres">{{genre}}</span>
+      <div *ngIf="searchResults.tracks.items.length>0" class="ml-1">
+        <h4>matching tracks</h4>
+        <div *ngFor = "let track of searchResults.tracks.items">
+          <div class="row py-2 mb-1" *ngIf="track.name != '' && track.album.images.length>0">
+            <div class="col-md-9">
+              <div class="row search-res well">
+                <div class="col-md-1">
+                    <img src="{{track.album.images[1].url}}" height="60px" width="60px" class="img-fluid mx-auto rounded-circle"/>
+                </div>
+                <div class="col-md-11">
+                  <span *ngIf="track.preview_url!=null; else nolink" class="lead"><a href="{{track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa> {{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
+                  <ng-template #nolink>
+                    <span class="lead"><a href="#">{{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
+                  </ng-template>
+                  <br/>
+                  <div class="btn-group">
+                    <button (click)="addToLibrary(track.id)" class="btn btn-outline-success"><fa name="plus-circle"></fa> library</button>
+                    <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+                      <button class="btn btn-outline-primary" ngbDropdownToggle>add to</button>
+                      <div class="dropdown-menu" ngbDropdownMenu>
+                        <button class="dropdown-item" *ngFor="let userPlaylist of userOwnedPlayists"><span class="lead"
+                          (click)="onAddToPlaylist(userPlaylist.name,userPlaylist.id,track.uri)">{{userPlaylist.name}}</span></button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </div>
       <hr class="grad">
       <div *ngIf="searchResults.albums.items.length>0" class="ml-1">
@@ -71,27 +83,24 @@
         </div>
       </div>
       <hr class="grad">
-      <div *ngIf="searchResults.tracks.items.length>0"  class="ml-1">
-        <h4>matching tracks</h4>
-        <div *ngFor = "let track of searchResults.tracks.items">
-          <div class="row py-2 mb-1" *ngIf="track.name != '' && track.album.images.length>0">
-            <div class="col-md-9">
-              <div class="row search-res well">
-                <div class="col-md-1">
-                    <img src="{{track.album.images[1].url}}" height="60px" width="60px" class="img-fluid mx-auto rounded-circle"/>
-                </div>
-                <div class="col-md-11">
-                  <span *ngIf="track.preview_url!=null; else nolink" class="lead"><a href="{{track.preview_url}}" target="_blank"><fa name="play-circle" animation="spin"></fa> {{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
-                  <ng-template #nolink>
-                    <span class="lead"><a href="#">{{track.name}}</a> - <strong>{{track.album.name}}</strong></span>
-                  </ng-template>
-                  <br/>
-                  <button (click)="addToLibrary(track.id)" class="btn btn-outline-success py-0"><fa name="plus-circle"></fa> library</button>
+      <div *ngIf="searchResults.artists.items.length>0" class="ml-1">
+          <h4>matching artists</h4>
+          <div *ngFor = "let artist of searchResults.artists.items">
+            <div class="row py-1 mb-1" *ngIf="artist.name != '' && artist.images.length>0">
+              <div class="col-md-12">
+                <div class="row search-res well">
+                  <div class="col-md-1">
+                      <img src="{{artist.images[1].url}}" height="50px" width="50px" class="img-fluid mx-auto rounded-circle"/>
+                  </div>
+                  <div class="col-md-8">
+                    <span class="lead"><a href="#">{{artist.name}}</a></span><br>
+                    <strong>genres: </strong>
+                    <span *ngFor = "let genre of artist.genres">{{genre}}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
       </div>
   </div>
 </div>
