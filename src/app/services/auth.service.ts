@@ -44,7 +44,7 @@ export class AuthService {
     let params = new HttpParams();
     params = params.append('grant_type', 'authorization_code');
     params = params.append('code', this.getCode());
-    params = params.append('redirect_uri', 'http://localhost:4200/home');
+    params = params.append('redirect_uri', 'http://localhost:4200/processing');
 
     return this.http.post('https://accounts.spotify.com/api/token',null,
       {

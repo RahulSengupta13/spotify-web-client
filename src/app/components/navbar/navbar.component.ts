@@ -21,6 +21,10 @@ export class NavbarComponent implements OnInit {
         this.logoutHidden = false;
       }
     );
+    
+    if(this.statusService.token){
+      this.logoutHidden = false;
+    }
 
    }
 

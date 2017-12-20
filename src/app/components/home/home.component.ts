@@ -44,8 +44,8 @@ export class HomeComponent implements OnInit {
   userOwnedPlayists:any;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private _flashMessagesService: FlashMessagesService,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private profileService: ProfileService,
@@ -55,34 +55,15 @@ export class HomeComponent implements OnInit {
       this.currentOffset = 0;
       this.userLibrary = {};
       this.userOwnedPlayists = [];
-      this.activatedRoute.queryParams.subscribe((params: Params) => {
-        if(params.code){
-          localStorage.setItem('code', params.code);
-          this.authService.requestTokens().subscribe(
-            result=>{
-              this._flashMessagesService.show('Login success!', { cssClass: 'alert-success', timeout: 2000 });
-              console.log(result);
-              this.fetchProfile();
-              this.fetchPlaylists();
-              this.fetchLibrary();
-            }, error => {
-              console.log(error);
-            }
-          );
-        } else{
-          this._flashMessagesService.show('Unable to login. Redirecting in 1 sec...', { cssClass: 'alert-danger', timeout: 2000 });
-          localStorage.removeItem('code');
-          this.router.navigate(['login']);
-        }
-      });
    }
 
   ngOnInit() {
-    
+    this.fetchProfile();
+    this.fetchPlaylists();
+    this.fetchLibrary();
   }
 
   fetchProfile(){
-
     this.profileService.fetchProfile().subscribe(
       result=>{
         let object = JSON.parse(JSON.stringify(result));

@@ -15,6 +15,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { ViewComponent } from './components/view/view.component';
+import { ProcessingComponent } from './components/processing/processing.component';
 
 import { AuthService } from './services/auth.service';
 import { ProfileService } from './services/profile.service';
@@ -25,6 +26,7 @@ import {AuthGuard} from './guard/auth.guard';
 
 import { ScrollEventModule } from 'ngx-scroll-event';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 //routes for this application
 const appRoutes = [
   {
@@ -34,16 +36,20 @@ const appRoutes = [
   {
     path: 'view-playlist/:oid/:pid',
     component: ViewComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'home',
     component: HomeComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: '',
     component: LoginComponent
+  },
+  {
+    path: 'processing',
+    component: ProcessingComponent
   }
 ];
 
@@ -53,7 +59,8 @@ const appRoutes = [
     NavbarComponent,
     LoginComponent,
     HomeComponent,
-    ViewComponent
+    ViewComponent,
+    ProcessingComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
