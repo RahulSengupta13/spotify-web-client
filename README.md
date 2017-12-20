@@ -1,4 +1,6 @@
 # SpotifyClient
+A spotify web client to manage your profile, playlists, music and more!
+![Alt text](screencap.png?raw=true "application preview")
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0.
 
