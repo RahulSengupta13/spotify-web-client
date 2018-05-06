@@ -27,7 +27,7 @@ import {AuthGuard} from './guard/auth.guard';
 import { ScrollEventModule } from 'ngx-scroll-event';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-//routes for this application
+// routes for this application
 const appRoutes = [
   {
     path: 'login',
@@ -66,7 +66,7 @@ const appRoutes = [
     RouterModule.forRoot(appRoutes),
     BrowserModule,
     HttpClientModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule,
     FlashMessagesModule.forRoot(),
     NgbModule.forRoot(),
