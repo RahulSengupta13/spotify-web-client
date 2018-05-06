@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    window.location.href = 'https://accounts.spotify.com/authorize?client_id=56138b8f51b4473fb441c6a7a572b559&response_type=token&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fprocessing%2F%3F&scope=user-read-private%20user-read-email%20playlist-read-private%20playlist-modify-public%20playlist-modify-private%20user-follow-read%20user-follow-modify%20user-library-read%20user-library-modify&show_dialog=true';
+    window.location.href = 'https://accounts.spotify.com/authorize?client_id=56138b8f51b4473fb441c6a7a572b559&response_type=token&redirect_uri=http%3A%2F%2Fplay.rahulsengupta.me%2F%3F&scope=user-read-private%20user-read-email%20playlist-read-private%20playlist-modify-public%20playlist-modify-private%20user-follow-read%20user-follow-modify%20user-library-read%20user-library-modify&show_dialog=true';
   }
 
 }
